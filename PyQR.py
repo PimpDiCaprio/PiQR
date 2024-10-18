@@ -1,13 +1,12 @@
 import math
-from qr_shapes import *
-from ErrorCorrection import ErrorCorrection
-import numpy as np
-from qr_masks import *
-from qr_penalty import *
-from qr_imager import *
-from qr_ps import *
-from qr_coords import *
-from DataAnalysis import DataAnalysis
+from .qr_shapes import *
+from .ErrorCorrection import ErrorCorrection
+from .qr_masks import *
+from .qr_penalty import *
+from .qr_imager import *
+from .qr_ps import *
+from .qr_coords import *
+from .DataAnalysis import DataAnalysis
 
 # Resource Links i used to build this
 # full qr creation Tutorial
@@ -22,7 +21,7 @@ class QR():
         self.Data = DataAnalysis()
         self.ECC = ErrorCorrection()
 
-    def generate_qr(self, data_string, correction_level='Low', mask=None, PrintData=False):
+    def generate_qr(self, data_string, correction_level='Low', mask=None, verbose=False):
         if mask is not None:
             if mask not in [0, 1, 2, 3, 4, 5, 6, 7]:
                 raise Exception('Invalid Mask Number - Please Select a Number Between 0 - 7')
@@ -32,27 +31,27 @@ class QR():
             raise Exception('Invalid Correction Level - Please Select from (Low, Medium, Quartile, High)')
             return
 
-        self.Mask = mask
+        data_string = str(data_string)
 
-        self.PrintData = PrintData
+        self.Mask = mask
         # Correction Level Options: Low, Medium, Quartile, High
         (version, capacity, ecc_code, mode, character_count, ec_codewords_per_block, group_1_blocks,
          data_codewords_per_block_1, group_2_blocks, data_codewords_per_block_2, total_blocks, binary_values,
          total_codewords) = self.Data.analyze(data_string, correction_level)
-        self.printer(f'Total Group 1 Blocks: {group_1_blocks}')
-        self.printer(f'Total Blocks per Group 1 Blocks: {data_codewords_per_block_1}')
-        self.printer(f'Total Group 2 Blocks: {group_2_blocks}')
-        self.printer(f'Total Blocks per Group 2 Blocks: {data_codewords_per_block_2}')
+        print(f'Total Group 1 Blocks: {group_1_blocks}') if verbose else ''
+        print(f'Total Blocks per Group 1 Blocks: {data_codewords_per_block_1}') if verbose else ''
+        print(f'Total Group 2 Blocks: {group_2_blocks}') if verbose else ''
+        print(f'Total Blocks per Group 2 Blocks: {data_codewords_per_block_2}') if verbose else ''
 
 
         total_data_bits = total_codewords * 8
         base_message = "".join(binary_values)
-        self.printer(f'Total Data Bits Required: {total_data_bits}')
-        self.printer(f'Requird Codewords Per Block: {ec_codewords_per_block}')
-        self.printer(f'Version: {version}')
-        self.printer(f'Mode String: {mode}')
-        self.printer(f'Character String: {character_count}')
-        self.printer(f'Initial Data String: {base_message}')
+        print(f'Total Data Bits Required: {total_data_bits}') if verbose else ''
+        print(f'Requird Codewords Per Block: {ec_codewords_per_block}') if verbose else ''
+        print(f'Version: {version}') if verbose else ''
+        print(f'Mode String: {mode}') if verbose else ''
+        print(f'Character String: {character_count}') if verbose else ''
+        print(f'Initial Data String: {base_message}') if verbose else ''
 
         binary = ''
         binary += mode
@@ -61,7 +60,7 @@ class QR():
 
         terminator = '0000' if len(binary) + 4 < total_data_bits else (
             '0'.zfill(total_data_bits - len(binary)) if len(binary) < total_data_bits else '')
-        self.printer(f'Terminator String: {terminator}')
+        print(f'Terminator String: {terminator}') if verbose else ''
 
         #for i in terminator:
             #binary = binary + i
@@ -72,7 +71,7 @@ class QR():
             binary += '0'
 
         pad_bits = int((total_data_bits - len(binary)) / 8)
-        self.printer(f'Total Pad Bits Required: {pad_bits}')
+        print(f'Total Pad Bits Required: {pad_bits}') if verbose else ''
         pad_bit_1 = '11101100'  # qr spec pad bit #1
         pad_bit_2 = '00010001'  # qr spec pad bit #2
         pad_string = ''
@@ -86,8 +85,8 @@ class QR():
                 binary = binary + pad_bit_2
                 pad_string = pad_string + pad_bit_2
                 pad_bits -= 1
-        self.printer(f'Pad String: {pad_string}')
-        self.printer(f'Data String: {binary}')
+        print(f'Pad String: {pad_string}') if verbose else ''
+        print(f'Data String: {binary}') if verbose else ''
         if total_blocks > 1:
             # split binary string into segments of length 8
             x = 8
@@ -95,7 +94,6 @@ class QR():
             block_ecc_codewords = []
             block_codewords = self.Data.get_block_data(group_1_blocks, data_codewords_per_block_1, group_2_blocks,
                                                        data_codewords_per_block_2, input_text_list)
-            print(block_codewords)
             for block in block_codewords:
                 block_ecc_codewords.append(self.ECC.get_ecc(ec_codewords_per_block, "".join(block)))
 
@@ -108,13 +106,15 @@ class QR():
 
         remainder_bits = ''.zfill(self.Data.get_remainder_bits(version))
         binary += remainder_bits
-        self.printer(f'Full Binary Data: {binary}')
+        print(f'Full Binary Data: {binary}') if verbose else ''
+
 
         reserve_pixels = []
         module_size = 1
         qr_size = (((int(version) - 1) * 4) + 21)
-        self.printer(f'QR Size: {qr_size} x {qr_size}')
+        print(f'QR Size: {qr_size} x {qr_size}') if verbose else ''
         finder_dim = 8
+
 
         # first set the grid locations of the first 3 reserve patters
         reserve1x, reserve1y = finder_dim, 0
@@ -125,6 +125,7 @@ class QR():
 
         reserve3x, reserve3y = (qr_size - (finder_dim * 2)) + finder_dim, (qr_size - (finder_dim * 2)) + finder_dim - 1
         [reserve_pixels.append(i) for i in get_coords(reserve3x, reserve3y, get_reserve_3_shape())]
+
 
         # now the three finders can be placed
         finder1x, finder1y = 0, qr_size - finder_dim  # the top left finder
@@ -138,6 +139,7 @@ class QR():
         finder3x, finder3y = 0, 0  # the bottom left finder
         [reserve_pixels.append(i) for i in get_coords(finder3x, finder3y, get_finder_3_shape()) if
          i[0] not in [i[0] for i in reserve_pixels]]
+
 
         v_reserver_dim = 3
         v_reserve1x, v_reserve1y = ((qr_size - (finder_dim * 2)) + finder_dim) - v_reserver_dim, (
@@ -174,32 +176,6 @@ class QR():
         ]
 
         if self.Mask is None:
-            #masked_data_0 = mask_0(data_pixels, qr_size)
-            #mask_0_penalty = get_penalty(masked_data_0, reserve_pixels, qr_size)
-            #masked_data_1 = mask_1(data_pixels, qr_size)
-            #mask_1_penalty = get_penalty(masked_data_1, reserve_pixels, qr_size)
-            #masked_data_2 = mask_2(data_pixels, qr_size)
-            #mask_2_penalty = get_penalty(masked_data_2, reserve_pixels, qr_size)
-            #masked_data_3 = mask_3(data_pixels, qr_size)
-            #mask_3_penalty = get_penalty(masked_data_3, reserve_pixels, qr_size)
-            #masked_data_4 = mask_4(data_pixels, qr_size)
-            #mask_4_penalty = get_penalty(masked_data_4, reserve_pixels, qr_size)
-            #masked_data_5 = mask_5(data_pixels, qr_size)
-            #mask_5_penalty = get_penalty(masked_data_5, reserve_pixels, qr_size)
-            #masked_data_6 = mask_6(data_pixels, qr_size)
-            #mask_6_penalty = get_penalty(masked_data_6, reserve_pixels, qr_size)
-            #masked_data_7 = mask_7(data_pixels, qr_size)
-            #mask_7_penalty = get_penalty(masked_data_7, reserve_pixels, qr_size)
-            #penalty_list = [
-                #(masked_data_0, mask_0_penalty, 0),
-                #(masked_data_1, mask_1_penalty, 1),
-                #(masked_data_2, mask_2_penalty, 2),
-                #(masked_data_3, mask_3_penalty, 3),
-                #(masked_data_4, mask_4_penalty, 4),
-                #(masked_data_5, mask_5_penalty, 5),
-                #(masked_data_6, mask_6_penalty, 6),
-                #(masked_data_7, mask_7_penalty, 7)
-            #]
             penalty_list = []
             for mask_int, mask_function in masks:
                 masked_data = mask_function(data_pixels, qr_size)
@@ -207,12 +183,12 @@ class QR():
                 penalty_list.append((masked_data, mask_penalty, mask_int))
 
             min_penalty = min([i[1] for i in penalty_list])
-            self.printer(f'Selected Mask: {[x[2] for x in penalty_list if x[1] == min_penalty][0]}')
+            print(f'Selected Mask: {[x[2] for x in penalty_list if x[1] == min_penalty][0]}') if verbose else ''
             mask_number = format([x[2] for x in penalty_list if x[1] == min_penalty][0], 'b').zfill(3)
             qr_data = [x[0] for x in penalty_list if x[1] == min_penalty][0]
         else:
             selected_mask = [i[1] for i in masks if i[0] == self.Mask][0]
-            self.printer(f'Selected Mask: {self.Mask}')
+            print(f'Selected Mask: {self.Mask}') if verbose else ''
             qr_data = selected_mask(data_pixels, qr_size)
             [qr_data.append(i) for i in reserve_pixels]
             mask_number = format(self.Mask, 'b').zfill(3)
@@ -273,32 +249,23 @@ class QR():
 
         return [qr_data, module_size]
 
-    def write_ps(self, data, file_dir=None):
-        qr_data, module_size = data
-        write_qr(qr_data, module_size, file_dir)
+def write_ps(data, file_dir=None):
+    qr_data, module_size = data
+    write_qr(qr_data, module_size, file_dir)
 
-    def return_ps(self, data, mod_size=False):
-        qr_data, module_size = data
-        if not mod_size:
-            pass
-        else:
-            module_size = mod_size
-        ps_data = return_ps(qr_data, module_size)
-        return ps_data
+def return_ps(data, mod_size=False):
+    qr_data, module_size = data
+    if not mod_size:
+        pass
+    else:
+        module_size = mod_size
+    ps_data = return_ps(qr_data, module_size)
+    return ps_data
 
-    def make_png(self, data, file_dir):
-        qr_data, module_size = data
-        create_qr_png(qr_data, file_dir)
+def make_png(data, file_dir, code_shape='Square'):
+    qr_data, module_size = data
+    create_qr_png(qr_data, file_dir, code_shape)
 
-    def show_png(self, data):
-        qr_data, module_size = data
-        display_qr_image(qr_data)
-
-    def printer(self, message):
-        if self.PrintData:
-            print(message)
-        else:
-            pass
-
-
-
+def show_png(data, code_shape='Square'):
+    qr_data, module_size = data
+    display_qr_image(qr_data, code_shape)
