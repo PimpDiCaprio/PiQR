@@ -1,5 +1,4 @@
-import numpy as np
-from Conversions import *
+from .conversions import *
 
 class DataAnalysis():
     def __init__(self):
@@ -472,26 +471,6 @@ class DataAnalysis():
 
         return data_pixels
 
-    # Function to convert binary to ASCII value
-
-
-
-
-    def binary_to_decimal(self, n):
-        num = str(n);
-        dec_value = 0;
-        # Initializing base
-        # value to 1, i.e 2 ^ 0
-        base1 = 1;
-
-        len1 = len(num);
-        for i in range(len1 - 1, -1, -1):
-            if (num[i] == '1'):
-                dec_value += base1;
-            base1 = base1 * 2;
-
-        return dec_value;
-
     def get_block_data(self, group_1_blocks, data_codewords_per_block_1, group_2_blocks, data_codewords_per_block_2, binary_values):
         block_list = []
         codeword_index = 0
@@ -528,18 +507,15 @@ class DataAnalysis():
 
     def interlace_data(self, block_ecc_codewords, block_list):
         full_codeword_list = []
-        int_blocks = [[self.binary_to_decimal(b) for b in i] for i in block_list]
+        int_blocks = [[binary_to_decimal(b) for b in i] for i in block_list]
         int_blocks = self.equalize_list(int_blocks)
-        interlaced_codewords = self.interlace_lists(int_blocks) #self.interlace_lists(int_blocks) [[row[i] for row in int_blocks] for i in range(len(int_blocks[0]))]
+        interlaced_codewords = self.interlace_lists(int_blocks)
         for sublist in interlaced_codewords:
             if '' in sublist:
                 while '' in sublist:
                     sublist.remove('')
 
-        interlaced_ecc_codewords = self.interlace_lists(block_ecc_codewords) #[[row[i] for row in block_ecc_codewords] for i in range(len(block_ecc_codewords[0]))]
-        #for item in block_ecc_codewords:
-            #print(int_to_hex(item))
-
+        interlaced_ecc_codewords = self.interlace_lists(block_ecc_codewords)
         full_interlaced_codewords = [format(int(item), 'b').zfill(8) for sublist in interlaced_codewords for item in sublist]
         full_interlaced_ecc_codewords = [format(int(item), 'b').zfill(8) for sublist in interlaced_ecc_codewords for item in sublist]
         [full_codeword_list.append(i) for i in full_interlaced_codewords]
@@ -547,6 +523,7 @@ class DataAnalysis():
         return full_codeword_list
 
     def get_remainder_bits(self, version):
+        # remainder bits are pre-defined and dependent on the qr version
         remainder_bits = [
             (1, 0),
             (2, 7),
@@ -600,7 +577,6 @@ class DataAnalysis():
 
         try:
             numbers = [int(i) for i in input_text]
-            #number = int(input_text)
             Numeric = True
             Alphanumeric = False
             ecc_type = 'Numeric'
