@@ -268,14 +268,6 @@ class ErrorCorrection():
                           ]
 
 
-        input_text = '00010101011101011010001000000100001001000011011011100101011101100111010000000100101101110111001101110011011101110011001010010110011101011110001100100101000101010110011010110111011100100011011001000111'
-        ec_codewords_per_block = 30
-        input_text = '11010101000101000100010010010111100101001111010000100011011101101011011110100110100001010110011001100010000000110000011010010100111001001100011110000100001001101111011011110010011001101000010010010101000000101010011110010101000000101000011110010101000001101011011100010110111101001101010100010101001101110011010011110011010101111010010110010011011101000000010001100111000001100111011011100101111001010100011010110010010001011010010011110110110101001011010011110110011000110111001110010110011101101000011011110100100100110111010001000101100100110010010010100100010001101100001000000110011101111010010101110101100101100101010100110101000001100010001110010011100101101111010101010100111101100001001101110111001101000100011101110100000100110010011100000110101100100001011010000100110001000010011110100111001000110001011011100111010001001100010000000100101001101100001001100101011100100000010000010111000001011010011101010111'
-        ec_codewords_per_block = 30
-        [143, 112, 146, 193, 134, 105, 87, 151, 128, 219, 125, 125, 46, 234, 203, 223, 40, 123, 252, 38, 14, 220, 168, 15, 34, 54, 71, 190, 62, 0]
-        #self.get_ecc(ec_codewords_per_block, input_text, verbose=True)
-
-
     def get_message_polynomial(self, input_text, ec_codewords_per_block):
         # Getting the decimal value of each character
         x = 8
@@ -349,21 +341,6 @@ class ErrorCorrection():
         for a_term, x_term in generator_polynomial:
             a_exp = a_term
             output = lead_term + a_exp
-            #output = (output % 256) + math.floor(output / 256) if output > 255 else output
-            output = (output % 255) if output > 255 else output
-            # convert to integer
-            int_output = self.get_log(output)
-            step_1.append(int_output)
-        return step_1
-
-    def multiply_generator_xor2(self, lead_term, generator_polynomial):
-        # convert to alpha
-        lead_term = self.get_antilog(lead_term)
-        step_1 = []
-        for a_term, _ in [i.split('x^') for i in generator_polynomial.split('+')]:
-            a_exp = int(a_term.split('a^')[1])
-            output = int(lead_term) + a_exp
-            #output = (output % 256) + math.floor(output / 256) if output > 255 else output
             output = (output % 255) if output > 255 else output
             # convert to integer
             int_output = self.get_log(output)
@@ -426,11 +403,6 @@ class ErrorCorrection():
                 x1 = (x1 % 256) + math.floor(x1 / 256) if x1 > 255 else x1
                 x2 = (x2 % 256) + math.floor(x2 / 256) if x2 > 255 else x2
 
-                #a1 = (a1 % 255) if a1 > 255 else a1
-                #a2 = (a2 % 255) if a2 > 255 else a2
-                #x1 = (x1 % 255) if x1 > 255 else x1
-                #x2 = (x2 % 255) if x2 > 255 else x2
-
                 exp1 = a1 + x1
                 exp2 = a2 + x2
                 terms.append((exp1, exp2))
@@ -450,7 +422,6 @@ class ErrorCorrection():
                 for term in items_to_combine:
                     terms.remove(term)
                     a, x = term
-                    #a = (a % 256) + math.floor(a / 256) if a > 255 else a
                     a = (a % 255) if a > 255 else a
                     tolog = self.get_log(a)
                     xor_items.append(tolog)
@@ -476,7 +447,7 @@ class ErrorCorrection():
         exponent_equalizer = lead_exponent - int(sorted_poly_list[0][1])
         new_poly_list = []
         for item in sorted_poly_list:
-            new_poly_list.append([item[0], int(item[1]) + exponent_equalizer]) #new_poly_list + f'{item[0]}x^{int(item[1]) + exponent_equalizer}'  # not actually going to add anything until i know exactly what to add +(ec_codewords_per_block-1)
+            new_poly_list.append([item[0], int(item[1]) + exponent_equalizer])
             string_count += 1
 
         return new_poly_list
@@ -508,11 +479,6 @@ class ErrorCorrection():
                 x1 = (x1 % 256) + math.floor(x1 / 256) if x1 > 255 else x1
                 x2 = (x2 % 256) + math.floor(x2 / 256) if x2 > 255 else x2
 
-                #a1 = (a1 % 255) if a1 > 255 else a1
-                #a2 = (a2 % 255) if a2 > 255 else a2
-                #x1 = (x1 % 255) if x1 > 255 else x1
-                #x2 = (x2 % 255) if x2 > 255 else x2
-
                 exp1 = int(a1) + int(x1)
                 exp2 = int(a2) + int(x2)
                 terms.append((f'{exp1}', f'{exp2}'))
@@ -531,7 +497,6 @@ class ErrorCorrection():
                 for term in items_to_combine:
                     terms.remove(term)
                     a, x = term
-                    #a = (int(a) % 256) + math.floor(int(a) / 256) if int(a) > 255 else int(a)
                     a = (int(a) % 255) if int(a) > 255 else int(a)
                     tolog = self.get_log(a)
                     xor_items.append(tolog)
@@ -558,7 +523,7 @@ class ErrorCorrection():
         exponent_equalizer = lead_exponent - int(sorted_poly[0][1])
         for item in sorted_poly:
             if string_count == len(sorted_poly):
-                new_poly_string = new_poly_string + f'{item[0]}x^{int(item[1])+exponent_equalizer}'  # not actually going to add anything until i know exactly what to add +(ec_codewords_per_block-1)
+                new_poly_string = new_poly_string + f'{item[0]}x^{int(item[1])+exponent_equalizer}'
             else:
                 new_poly_string = new_poly_string + f'{item[0]}x^{int(item[1])+exponent_equalizer}+'
             string_count += 1
@@ -580,7 +545,6 @@ class ErrorCorrection():
         int_notations = []
         for a_term, x_term in generator_polynomial:
             a_var = a_term + int(lead_alpha_exponent)
-            #a_var = (a_var % 256) + math.floor(a_var / 256) if a_var > 255 else a_var
             a_var = (a_var % 255) if a_var > 255 else a_var
             a_var = self.get_log(a_var)
             int_notations.append([a_var, x_term])
@@ -602,7 +566,6 @@ class ErrorCorrection():
                 output = a_var ^ x_var
             else:
                 output = a_var ^ 0
-
 
             step_1b.append(output)
             var_index += 1
@@ -630,106 +593,18 @@ class ErrorCorrection():
                 last_list.pop(0)
                 current_loop += 1
                 print(f'Step {current_loop}', last_list) if verbose else ''
-
-            #elif last_list[0] == 1:
-                #last_list.pop(0)
-                #current_loop += 1
-                #print(f'Step {current_loop}', last_list) if verbose else ''
-
+                
             lead_term = last_list[0]
 
             current_loop += 1
 
-        #print(lead_exponent)
-        #print(len(last_list))
-        #print(current_loop)
-        #print(lead_exponent - len(last_list) - (current_loop-1))
         if len(last_list) < ec_codewords_per_block:
             if lead_exponent - len(last_list) - (current_loop - 1) == 0:
                 last_list.append(0)
             elif lead_exponent - len(last_list) - (current_loop - 1) == -1:
                 last_list.insert(0, 0)
-            #print(input_text, '\n', ec_codewords_per_block, '\n', last_list)
-
-        #print('Total Steps', current_loop) if verbose else ''
 
         print('Final Output:', last_list) if verbose else ''
-
-        #print('#######################################################################################################')
-        return last_list
-
-    def get_ecc2(self, ec_codewords_per_block, input_text):
-        print('Required Number of Codewords', ec_codewords_per_block)
-        message_polynomial = self.get_message_polynomial_string(input_text, ec_codewords_per_block)
-        # Verify that the lead term of the generator polynomial has the same exponent as the lead of the message polynomial
-        lead_exponent = int(message_polynomial.split('+')[0].split('^')[1])
-        generator_polynomial = self.get_generator_polynomial_string(ec_codewords_per_block, lead_exponent)
-        #print(message_polynomial)
-        #print(generator_polynomial)
-
-        # Step 1a: Multiply the Generator Polynomial by the Lead Term of the Message Polynomial
-        lead_term = message_polynomial.split('+')[0]
-        lead_alpha_exponent = self.get_antilog(int(int(lead_term.split('x')[0])))
-        int_notations = []
-        for a_term, _ in [i.split('x^') for i in generator_polynomial.split('+')]:
-            a_var = int(a_term.split('^')[1]) + int(lead_alpha_exponent)
-            #a_var = (a_var % 256) + math.floor(a_var / 256) if a_var > 255 else a_var
-            a_var = (a_var % 255) if a_var > 255 else a_var
-            a_var = self.get_log(a_var)
-            int_notations.append([str(a_var), _])
-
-        #print('int_notations', int_notations)
-
-        # Step 1b: XOR the result with the message polynomial
-        int_notations, split_message = self.make_even(int_notations, [x.split('x^') for x in message_polynomial.split('+')])
-        step_1b = []
-        var_index = 0
-        for i in range(len(int_notations)):
-            item = split_message[i] if split_message[i] != 0 else [0, 0]
-            item_2 = int_notations[i] if int_notations[i] != 0 else [0, 0]
-
-
-            a_var = int(item[0])
-            x_var = int(item_2[0])
-            if var_index < len(int_notations):
-                output = a_var ^ x_var
-            else:
-                output = a_var ^ 0
-
-
-            step_1b.append(output)
-            var_index += 1
-        # discard the lead zero
-        #print(step_1b)
-        step_1b.remove(0)
-
-
-        total_loops = len([i.split('x^') for i in message_polynomial.split('+')])
-        print('total_loops', total_loops)
-        current_loop = 2
-        lead_term = step_1b[0]
-        last_list = step_1b
-        #for i in range(total_loops):
-        while current_loop <= total_loops:
-            # Multiply the Generator Polynomial by the Lead Term of the previous loop
-            multiplied_list = self.multiply_generator_xor2(lead_term, generator_polynomial)
-            #print('multiplied_list', multiplied_list)
-            # make the two lists the same length by adding zeros to the lesser
-            last_list, multiplied_list = self.make_even(last_list, multiplied_list)
-
-            # XOR the result with the result from previous loop
-            last_list = self.xor_results(multiplied_list, last_list)
-
-            # Discard lead term if lead term is zero
-            while last_list[0] == 0:
-                last_list.remove(0)
-                current_loop += 1
-
-            #print(last_list)
-            lead_term = last_list[0]
-            current_loop += 1
-
-        print('Output ECC Codewords', len(last_list))
         return last_list
 
     def get_final_string(self):
@@ -798,8 +673,6 @@ class ErrorCorrection():
                 break
             else:
                 xord = xord[1:]
-
-
 
         while len(xord) > 10:
             # remove leading zeroes from the result
@@ -883,24 +756,3 @@ class ErrorCorrection():
 
         xord = xord.zfill(ec_codewords_per_block)
         return xord
-
-
-
-#input_text = '0100000000101100111001011110010101000101100001101001010010110100100101011010010110010100100001110111010011010110100101110110011011000011011001100100011000110111001001110000010101110100111101001000010110100010010101110101001100000110011100111001010010000111101000110001001110010101100001100111011101010100110001100111010011100011011101101011011100000011001100101010011011000110011001010101001001010101001101010100001001010110000101000000001110010011011000110001001010000101101001101011011100000100001101101111010000010111010101111001011101000011000001011001011101010010100001110111010001100110111001111010001010010011010101000000010000100100110001000011010010100010101000110101011011110100010100110011010001010100010101010110001000110110010001010001001110010110111100101001010000010101011101000010010101000111100001010110010001110011011001010101011100000100001101110111010101000110110100100001011001100010'
-#ec_codewords_per_block = 28
-
-#count = 0
-#for item in text_list:
-    #input_text = item
-    #ec_codewords_per_block = number_list[count]
-    #print(get_ecc(ec_codewords_per_block, input_text))
-    #count += 1
-
-
-
-
-
-x = ErrorCorrection()
-#28
-#α^0x^28+α^168x^27+α^223x^26+α^200x^25+α^104x^24+α^224x^23+α^234x^22+α^108x^21+α^180x^20+α^110x^19+α^190x^18+α^195x^17+α^147x^16+α^205x^15+α^27x^14+α^232x^13+α^201x^12+α^21x^11+α43x10 + α245x9 + α87x8 + α42x7 + α195x6 + α212x5 + α119x4 + α242x3 + α37x2 + α9x + α123
-#a^0x^140+a^168x^139+a^223x^138+a^200x^137+a^104x^136+a^224x^135+a^234x^134+a^108x^133+a^180x^132+a^110x^131+a^190x^130+a^195x^129+a^147x^128+a^205x^127+a^27x^126+a^232x^125+a^201x^124+a^21x^123+a^43x^122+a^245x^121+a^87x^120+a^42x^119+a^195x^118+a^212x^117+a^119x^116+a^242x^115+a^37x^114+a^9x^113+a^123x^112
