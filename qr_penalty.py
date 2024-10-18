@@ -98,9 +98,6 @@ def condition_2(mask_data, qr_size):
 def condition_3(mask_data, qr_size):
     horizontals = make_rows(mask_data, qr_size)
     horizontals = transpose(horizontals)
-    #for row in horizontals:
-    #    [row.append(0) for i in range(4)]
-    #    [row.insert(0, 0) for i in range(4)]
 
     def count_pattern_occurrences(pattern, sequence):
         pattern_length = len(pattern)
