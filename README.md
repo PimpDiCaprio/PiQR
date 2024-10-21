@@ -59,9 +59,12 @@ ps_string = PiQR.return_ps(qr_output)
 ## Author
 
   PimpDiCaprio
+  info@aperturesoftware.us
 
 ## Version History
 
+* 0.1.1
+    * Import Name Fixes
 * 0.1.0
     * Initial Release
 
