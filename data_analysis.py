@@ -1,4 +1,4 @@
-from .conversions import *
+from PiQR.conversions import *
 
 # Subdict indexs refer to the following
 # Code Word Qty,  Code Words Per Block,  Group1 Blocks,  Block1 Code Word Qty,  Group2 Blocks,  Block2 Code Word Qty
