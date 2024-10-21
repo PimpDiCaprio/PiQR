@@ -20,7 +20,7 @@ I created this QR generator tool with the express purpose of generating custom Q
 
 * Clone the repo
   ```sh
-  git clone https://github.com/PimpDiCaprio/PyQR.git
+  git clone https://github.com/PimpDiCaprio/PiQR.git
   ```
 
 ### Executing program
@@ -28,27 +28,27 @@ I created this QR generator tool with the express purpose of generating custom Q
 * How to run the program
 * Step-by-step bullets
 ```
-from PyQR import PyQR
+from PiQR import PiQR
 
 # define the input string for the qr code
 qr_string = 'Test Input'
 
 # generate qr binary for the input string
-qr_output = PyQR.generate_qr(qr_string, correction_level='Medium')
+qr_output = PiQR.generate_qr(qr_string, correction_level='Medium')
 
 # the following options are available for displaying or saving the qr code
 
 # display the qr code
-PyQR.show_png(qr_output)
+PiQR.show_png(qr_output)
 
 # save the qr as a png
-PyQR.make_png(qr_output, 'test.png')
+PiQR.make_png(qr_output, 'test.png')
 
 # write a postscript file containing the qr
-PyQR.write_ps(qr_output, 'test.ps')
+PiQR.write_ps(qr_output, 'test.ps')
 
 # return a postscript object in string form for placement into a ps file
-ps_string = PyQR.return_ps(qr_output)
+ps_string = PiQR.return_ps(qr_output)
 
 ```
 
