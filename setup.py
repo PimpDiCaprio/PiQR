@@ -12,6 +12,7 @@ setup(
     packages=find_packages(),  # Automatically find packages in the current directory
     install_requires=[
         'opencv-contrib-python',  # Dependency for image processing
+        'numpy',
     ],
     classifiers=[
         'Programming Language :: Python :: 3',
