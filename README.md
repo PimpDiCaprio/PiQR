@@ -52,18 +52,9 @@ ps_string = PyQR.return_ps(qr_output)
 
 ```
 
-## Help
+## Author
 
-Any advise for common problems or issues.
-```
-command to run if program contains helper info
-```
-
-## Authors
-
-Contributors names and contact info
-
-ex. PimpDiCaprio
+  PimpDiCaprio
 
 ## Version History
 
@@ -77,6 +68,6 @@ This project is licensed under the [NAME HERE] License - see the LICENSE.md file
 ## Acknowledgments
 
 Inspiration, code snippets, etc.
-* [full qr creation Tutorial](https://www.thonky.com/qr-code-tutorial/introduction)
+* [Thonky's QR Code Tutorial](https://www.thonky.com/qr-code-tutorial/introduction)
 * [General Resource QR Wiki](https://en.wikipedia.org/wiki/QR_code)
 * [QR Creation Tool with Steps](https://www.nayuki.io/page/creating-a-qr-code-step-by-step)
