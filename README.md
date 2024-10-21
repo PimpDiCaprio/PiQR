@@ -28,7 +28,7 @@ I created this QR generator tool with the express purpose of generating custom Q
 * How to run the program
 * Step-by-step bullets
 ```
-import PyQR
+from PyQR import PyQR
 
 # define the input string for the qr code
 qr_string = 'Test Input'
