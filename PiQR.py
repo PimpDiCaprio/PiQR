@@ -1,12 +1,12 @@
 import math
-from .qr_shapes import *
-from .error_correction import *
-from .qr_masks import *
-from .qr_penalty import *
-from .qr_imager import *
-from .qr_ps import *
-from .qr_coords import *
-from .data_analysis import *
+from PiQR.qr_shapes import *
+from PiQR.error_correction import *
+from PiQR.qr_masks import *
+from PiQR.qr_penalty import *
+from PiQR.qr_imager import *
+from PiQR.qr_ps import *
+from PiQR.qr_coords import *
+from PiQR.data_analysis import *
 
 # Resource Links i used to build this
 # full qr creation Tutorial
