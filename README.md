@@ -22,6 +22,10 @@ I created this QR generator tool with the express purpose of generating custom Q
   ```sh
   git clone https://github.com/PimpDiCaprio/PiQR.git
   ```
+* Installing with pip
+  ```sh
+  pip install PiQR
+  ```
 
 ### Executing program
 
