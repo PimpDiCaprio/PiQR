@@ -250,7 +250,7 @@ def return_ps(data, mod_size=False):
         pass
     else:
         module_size = mod_size
-    ps_data = return_ps(qr_data, module_size)
+    ps_data = get_ps_string(qr_data, module_size)
     return ps_data
 
 def make_png(data, file_dir, code_shape='Square'):

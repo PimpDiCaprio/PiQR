@@ -64,7 +64,7 @@ restore showpage
 
     os.startfile(filename)
 
-def return_ps(qr_data, module_size):
+def get_ps_string(qr_data, module_size):
     full_ps_string = ''
     file_start = '''
 /qr_code {
