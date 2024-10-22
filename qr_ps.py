@@ -58,7 +58,7 @@ restore showpage
         else:
             state = 'off_bit'
         qr_file.write(f'''
-    gsave {x} {y} translate {state} grestore''')
+    gsave {x*module_size} {y*module_size} translate {state} grestore''')
     qr_file.write(file_end)
     qr_file.close()
 
@@ -98,7 +98,7 @@ def return_ps(qr_data, module_size):
         else:
             state = 'off_bit'
         full_ps_string += f'''
-        gsave {x} {y} translate {state} grestore'''
+        gsave {x*module_size} {y*module_size} translate {state} grestore'''
 
     full_ps_string += file_end
 
