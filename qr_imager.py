@@ -38,7 +38,8 @@ def create_qr_png(input_data, file_dir, code_shape='Square'):
     height = width
     # Create a blank white image for the QR code
     qr_image = np.zeros([width + (module_size * size_factor) + placement, height, 3], dtype=np.uint8)
-    qr_image.fill(255)  # Fill the image with white color
+    #qr_image.fill(255)  # Fill the image with white color
+    cv2.rectangle(qr_image, (0, 0), (width+(module_size*size_factor)+placement, width+(module_size*size_factor)+placement), (199, 199, 191), -1)
 
     # Draw the QR code modules on the image
     for coords, state in oriented_data:
@@ -58,7 +59,7 @@ def create_qr_png(input_data, file_dir, code_shape='Square'):
                 cv2.rectangle(qr_image, (x1 + 50, y1), (x2 + 50, y2), color, -1)
 
     # Resize the QR code image to a standard size for output
-    bigger = cv2.resize(qr_image, (250, 250))
+    bigger = cv2.resize(qr_image, (120, 120))
     write_image(bigger, file_dir)  # Save the generated image
 
 def display_qr_image(input_data, code_shape):
