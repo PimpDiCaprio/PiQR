@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='PiQR',
-    version='0.1.2',
+    version='0.1.3',
     author='PimpDiCaprio',
     author_email='info@aperturesoftware.us',
     description='A Python library for displaying QR codes.',

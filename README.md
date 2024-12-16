@@ -67,6 +67,10 @@ ps_string = PiQR.return_ps(qr_output)
     * Import Name Fixes
 * 0.1.0
     * Initial Release
+* 0.1.2
+    * Update to module size designation in qr_ps
+* 0.1.3
+    * Fixed broken byte conversion for Alphanumeric QR generation
 
 ## License
 
