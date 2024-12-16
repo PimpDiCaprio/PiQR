@@ -1791,13 +1791,15 @@ def analyze_data(input_text, ecc_level):
         for item in char_values:
             segment = input_text_list[value_index]
             if len(input_text) % 2 != 0:
-                if item == char_values[-1]:
+                #if item == char_values[-1]:
+                if value_index == len(char_values) - 1:
                     binary = format(int(item), 'b').zfill(6)
                 else:
                     binary = format(int(item), 'b').zfill(11)
             else:
                 binary = format(int(item), 'b').zfill(11)
             binary_values.append(binary)
+            value_index += 1
 
     if Byte:
         code_words = 0
