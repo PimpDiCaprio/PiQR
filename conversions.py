@@ -28,13 +28,11 @@ def binary_to_decimal(n):
 
     return dec_value;
 
-
 def binary_to_hex(bits):
     # Convert a list of binary strings (bits) to their corresponding hexadecimal representations.
     char = [chr(int(i, 2)) for i in bits]  # Convert binary to characters.
     # Format each character's ASCII value as a two-digit hexadecimal string.
     return ["{0:02x}".format(ord(i)) for i in char]
-
 
 def int_to_binary(bits):
     # Convert a list of integers to a list of 8-bit binary strings.
@@ -45,7 +43,6 @@ def int_to_binary(bits):
         binary_list.append(binary_data)  # Append the binary string to the list.
 
     return binary_list  # Return the list of binary strings.
-
 
 def int_to_hex(bits):
     # Convert a list of integers to their hexadecimal representation by first converting to binary.
