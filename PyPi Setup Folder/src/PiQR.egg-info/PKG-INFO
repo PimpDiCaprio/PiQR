@@ -1,3 +1,18 @@
+Metadata-Version: 2.4
+Name: PiQR
+Version: 0.1.6
+Summary: A Python library for generating and displaying QR codes.
+Author-email: PimpDiCaprio <info@aperturesoftware.us>
+Project-URL: Homepage, https://github.com/PimpDiCaprio/PyQR
+Project-URL: Issues, https://github.com/PimpDiCaprio/PyQR/issues
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Dynamic: license-file
+
 # Project Title
 
 QR generator tool that returns either a PNG, postscript file, or a postscript object of an input string
@@ -73,6 +88,10 @@ ps_string = PiQR.return_ps(qr_output)
     * Fixed broken byte conversion for Alphanumeric QR generation
 * 0.1.4
     * Update to data_analysis, added json storage for the dictionaries to clean up the code
+* 0.1.5
+    * Fixed broken project upload
+* 0.1.6
+    * Fixed missing json file
 
 ## License
 

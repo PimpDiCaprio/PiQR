@@ -4,11 +4,11 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "PiQR"
-version = "0.1.4"
+version = "0.1.6"
 authors = [
   { name="PimpDiCaprio", email="info@aperturesoftware.us" },
 ]
-description = "A small example package"
+description = "A Python library for generating and displaying QR codes."
 readme = "README.md"
 requires-python = ">=3.8"
 classifiers = [
