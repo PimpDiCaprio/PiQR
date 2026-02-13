@@ -1818,19 +1818,16 @@ def analyze_data(input_text, ecc_level):
     version = min([i[0] for i in version_capacity_data if i[cc_index] > len(input_text)])
     capacity = [i[cc_index] for i in version_capacity_data if i[0] == version][0]
     ecc_code = f'{version}-{ecc_level[0]}'
-    ec_codewords_per_block = ecc_dict[ecc_code]['BlockQty'] #[i[2] for i in ecc_list if i[0] == ecc_code][0]
+    ec_codewords_per_block = ecc_dict[ecc_code]['BlockQty']
     char_len = '9' if version <= 9 else ('26' if version <= 26 else '40')
     character_count = format(len(input_text), 'b').zfill(char_fill[ecc_type][char_len])
 
-    group_1_blocks = ecc_dict[ecc_code]['G1Blocks'] #[i[3] for i in ecc_list if i[0] == ecc_code][0]
-    data_codewords_per_block_1 = ecc_dict[ecc_code]['B1CodeQty'] #[i[4] for i in ecc_list if i[0] == ecc_code][0]
-    group_2_blocks = ecc_dict[ecc_code]['G2Blocks'] #[i[5] for i in ecc_list if i[0] == ecc_code][0]
-    data_codewords_per_block_2 = ecc_dict[ecc_code]['B2CodeQty'] #[i[6] for i in ecc_list if i[0] == ecc_code][0]
+    group_1_blocks = ecc_dict[ecc_code]['G1Blocks']
+    data_codewords_per_block_1 = ecc_dict[ecc_code]['B1CodeQty']
+    group_2_blocks = ecc_dict[ecc_code]['G2Blocks']
+    data_codewords_per_block_2 = ecc_dict[ecc_code]['B2CodeQty']
 
     total_blocks = int(group_1_blocks) + int(group_2_blocks) if group_2_blocks != '' else group_1_blocks
     total_codewords = int(int(data_codewords_per_block_1)*int(group_1_blocks)) + (int(int(data_codewords_per_block_2)*int(group_2_blocks)) if group_2_blocks != '' else 0)
 
     return version, capacity, ecc_code, mode, character_count, ec_codewords_per_block, group_1_blocks, data_codewords_per_block_1, group_2_blocks, data_codewords_per_block_2, total_blocks, binary_values, total_codewords
-
-
-
